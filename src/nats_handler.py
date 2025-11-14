@@ -2,7 +2,7 @@ import asyncio
 import json
 import yaml
 from nats.aio.client import Client as NATS
-from vault import Vault
+from .vault import Vault
 
 class NatsHandler:
     def __init__(self, config):
