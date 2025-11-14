@@ -1,6 +1,6 @@
 # swarm-vaultctl
 
-swarm-vaultctl is a Docker container designed to run as a secure, centralized vault service inside a Docker Swarm cluster. It provides a portable vault for storing and retrieving secrets, tokens, small encrypted documents, and structured secure data. All operational communication to and from the vault occurs exclusively through a NATS messaging bus. Human programmers may access a local programming interface for debugging or administrative use, but AI agents and automated components interact only through NATS subjects.
+swarm-vaultctl is a Docker container designed to run as a secure, centralized vault service inside a Docker Swarm cluster, part of a coordinated ecosystem of autonomous service pods. It provides a portable vault for storing and retrieving secrets, tokens, small encrypted documents, and structured secure data, serving as the credential authority for AI agents. All operational communication to and from the vault occurs exclusively through a NATS messaging bus (swarm-natscore). Human programmers may access a local programming interface for debugging or administrative use, but AI agents and automated components interact only through NATS subjects.
 
 ## How It Works
 
@@ -149,6 +149,36 @@ ssh root@<container_ip> -p 22
 - SSH exposes the container to potential attacks.
 - Root access allows full control.
 - Disable SSH in production by modifying the Dockerfile or entrypoint.
+
+## Ecosystem Integration
+
+swarm-vaultctl is part of a coordinated ecosystem of autonomous service pods in a Docker Swarm environment, forming a multi-agent platform that AIs can use as a toolbox. Each pod has a single purpose but relies on others for functionality, communicating exclusively through a central NATS messaging fabric (swarm-natscore).
+
+### Pod Responsibilities
+- **swarm-natscore**: Central NATS server for message routing, subject hierarchies, and stable communication.
+- **swarm-logger**: Subscribes to NATS messages for observability, auditability, and traceability.
+- **swarm-cronctl**: Sends timed triggers for AI agent activation and workflows.
+- **swarm-vaultctl**: Manages sensitive material, issues scoped short-lived credentials via NATS.
+- **swarm-gateway**: Translates HTTP requests to NATS messages and responses back.
+
+### swarm-vaultctl's Role
+As the credential authority, swarm-vaultctl holds all secrets and provides controlled access. It ensures no other pod stores full secrets, limiting blast radius. Agents request credentials through defined NATS messages, receiving clear responses with lifecycles.
+
+### Message Patterns and Interfaces
+- **Request Subjects**: vault.requests (e.g., {"operation": "get", "key": "secret", "subject": "agent.requests"})
+- **Response Subjects**: vault.replies (e.g., {"status": "success", "data": "value"} or {"status": "error", "message": "Access denied"})
+- **Operations**: get, set, delete, list, rotate, status.
+- **ACL Enforcement**: Restricts operations by requesting subject.
+- **Dependencies**: Relies on swarm-natscore for communication; swarm-cronctl may trigger rotations; swarm-logger records interactions.
+- **Assumptions**: NATS is stable; agents handle credential expiration; no direct pod-to-pod communication outside NATS.
+
+### Operational Principles
+- **Focus**: Exclusive on secret storage and credential issuance.
+- **Interoperability**: Clear message schemas, consistent formats, documented error states.
+- **Stability**: Reliable encryption, predictable responses, no message interpretation.
+- **Documentation**: This README serves as internal knowledge for rebuilds/restarts, ensuring awareness of ecosystem fit.
+
+By maintaining this holistic view, swarm-vaultctl ensures compatibility, clarity, and long-term stability in the multi-agent environment.
 
 ## Security Considerations
 

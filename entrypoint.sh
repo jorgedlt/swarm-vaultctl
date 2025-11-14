@@ -16,5 +16,7 @@ if [ -f /app/config/config.yaml ]; then
     export CONFIG_FILE=/app/config/config.yaml
 fi
 
+export PYTHONPATH=/app/src
+
 # Start the vault service
-exec python src/main.py
+cd /app && exec python -m src.main

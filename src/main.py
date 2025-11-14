@@ -1,7 +1,7 @@
 import asyncio
 import yaml
 import os
-from .nats_handler import NatsHandler
+from nats_handler import NatsHandler
 
 def load_config():
     config_file = os.getenv('CONFIG_FILE', '/app/config/config.yaml')

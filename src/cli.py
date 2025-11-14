@@ -1,7 +1,7 @@
 import click
 import json
 import yaml
-from .vault import Vault
+from vault import Vault
 
 @click.group()
 @click.option('--config', default='/app/config/config.yaml', help='Config file path')
