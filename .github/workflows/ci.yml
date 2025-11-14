@@ -24,10 +24,12 @@ jobs:
 
     - name: Run unit tests
       run: |
+        export PYTHONPATH=$PWD/src
         pytest tests/unit/ -v
 
     - name: Run integration tests
       run: |
+        export PYTHONPATH=$PWD/src
         pytest tests/integration/ -v
 
     - name: Lint with flake8
