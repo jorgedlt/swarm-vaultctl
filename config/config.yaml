@@ -1,0 +1,20 @@
+nats:
+  url: nats://localhost:4222
+  user: ""
+  pass: ""
+
+encryption:
+  master_key_file: /app/config/master.key
+
+subjects:
+  request: vault.requests
+  reply: vault.replies
+
+storage:
+  file: /app/data/vault.db
+
+acl:
+  - subject: admin.requests
+    operations: ["get", "set", "delete", "list", "rotate", "status"]
+  - subject: user.requests
+    operations: ["get", "set"]
