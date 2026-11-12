@@ -188,3 +188,17 @@ By maintaining this holistic view, swarm-vaultctl ensures compatibility, clarity
 - Regularly rotate keys.
 - Do not expose the CLI externally.
 - Remove SSH backdoor for production deployments.
+
+## Completeness grade: B
+
+The vault control code and tests are in this repo. The secrets it
+manages are, by design, never in code.
+
+## Not in code
+
+- Every secret value the vault handles: held in the vault itself and
+  the user's secret stores, never in this repo.
+- The NATS messaging server the swarm runs on: deployed separately on
+  the user's infrastructure; address and credentials are runtime
+  configuration.
+- LLM provider API keys: the user's secret stores.
